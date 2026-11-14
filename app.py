@@ -11,15 +11,10 @@ st.set_page_config(page_title="Cinéfilo IA - Reseñas de Películas y Series", 
 
 # Configuración de la interfaz de la página
 st.title("🎬 Tu Crítico de Cine Personal con IA")
-st.markdown("Sube la captura o el póster de una película o serie y recibe una reseña a tu medida.")
+st.markdown("Ingresa tu clave de OpenAI, tus gustos cinéfilos, sube la imagen de una película o serie y recibe una reseña a tu medida.")
 
-# Inicializamos el cliente de OpenAI usando los Secrets de Streamlit Cloud de forma automática
-try:
-    api_key = st.secrets["OPENAI_API_KEY"]
-    client = OpenAI(api_key=api_key)
-except Exception:
-    st.error("⚠️ No se encontró la clave `OPENAI_API_KEY` en los Secrets de Streamlit. Por favor configúrala en el panel de administración.")
-    client = None
+# Campo para que el usuario ingrese su Clave de OpenAI de forma segura (oculta con asteriscos)
+ke = st.text_input('Ingresa tu Clave de OpenAI (API Key)', type="password")
 
 # Campo para que el usuario ingrese sus gustos cinematográficos
 user_tastes = st.text_input(
@@ -47,10 +42,13 @@ analyze_button = st.button("Generar Reseña Personalizada", type="primary")
 if analyze_button:
     if not uploaded_file:
         st.warning("Por favor, sube la imagen de una película o serie.")
-    elif client is None:
-        st.error("La aplicación no se pudo conectar con OpenAI debido a un problema con la clave.")
+    elif not ke:
+        st.warning("Por favor, ingresa tu API key de OpenAI para continuar.")
     else:
         with st.spinner("Analizando la imagen y redactando tu reseña cinéfila..."):
+            # Inicializamos el cliente de OpenAI aquí dentro de forma segura solo cuando ya tenemos la clave
+            client = OpenAI(api_key=ke)
+            
             # Codificar la imagen
             base64_image = encode_image(uploaded_file)
         
@@ -102,4 +100,4 @@ if analyze_button:
                 message_placeholder.markdown(full_response)
         
             except Exception as e:
-                st.error(f"Ocurrió un error al procesar la solicitud: {e}")
+                st.error(f"Ocurrió un error al procesar la solicitud (verifica que tu API Key sea correcta): {e}")
