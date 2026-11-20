@@ -47,4 +47,3 @@ st.markdown(
     "2. Analiza una película y pulsa **Enviar a la pantalla de cine**.\n"
     "3. Los LEDs cambian y aquí ves la respuesta. Gira el potenciómetro para poner tu propia nota."
 )
-
