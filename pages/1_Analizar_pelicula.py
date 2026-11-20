@@ -107,4 +107,3 @@ if a:
                 st.success("Calificación enviada por MQTT. Míralo en 'Mi cine'.")
             else:
                 st.error("No se pudo publicar en el broker MQTT.")
-
